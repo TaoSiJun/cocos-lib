@@ -1,0 +1,29 @@
+{
+  "name": "cocos-lib",
+  "version": "1.0.0",
+  "description": "Some tools for cocos v2.4",
+  "main": "index.js",
+  "scripts": {
+    "test": "console.log('Hello')",
+    "build": "tsc & uglifyjs ./build/ccl.js --output ./build/ccl.min.js --mangle"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TaoSiJun/cocos-lib.git"
+  },
+  "keywords": [
+    "cocos",
+    "cocos creator",
+    "html5 game"
+  ],
+  "author": "taosijun",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TaoSiJun/cocos-lib/issues"
+  },
+  "homepage": "https://github.com/TaoSiJun/cocos-lib#readme",
+  "type": "module",
+  "devDependencies": {
+    "uglify-js": "^3.15.5"
+  }
+}

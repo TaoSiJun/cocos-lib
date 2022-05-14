@@ -1,0 +1,13 @@
+# Build and Release Folders
+.cache/
+node_modules/
+build/
+modules/
+
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
