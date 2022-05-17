@@ -1,3 +1,5 @@
 namespace ccl {
-    export class PanelManager {}
+    class PanelManager {}
+
+    export const panelMgr = new PanelManager();
 }

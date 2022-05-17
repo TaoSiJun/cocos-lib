@@ -1,5 +1,9 @@
 namespace ccl {
-    export class PopupManager {
-        private static _canvas = null;
+    class PopupManager {
+        public show(prefabPath: string) {}
+
+        public hide(prefabPath: string) {}
     }
+
+    export const popupMgr = new PopupManager();
 }
