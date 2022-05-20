@@ -13,7 +13,7 @@ namespace ccl {
 
     class Resources {
         /**
-         * 创建一个资源分组
+         * 创建一个资源分组配置
          * @param groupName 组名
          * @param paths 该组的所有资源路径
          * @param override `true`(默认)会覆盖掉之前的路径 `false`添加到当前组
@@ -70,7 +70,7 @@ namespace ccl {
         }
 
         /**
-         * 释放一个分组的资源
+         * 释放一个分组的资源 会释放已创建的资源分组配置
          * @param groupName
          */
         releaseGroup(groupName: string) {
