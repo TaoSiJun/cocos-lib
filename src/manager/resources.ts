@@ -1,4 +1,4 @@
-namespace ccl {
+namespace cclib {
     const __groupsCache: { [name: string]: string[] } = {};
     const __assetsCache: { [name: string]: { [path: string]: {} } } = {};
 
@@ -43,9 +43,9 @@ namespace ccl {
             if (!_paths) {
                 return Promise.reject("group is not found:" + groupName);
             } else {
-                let assets = [];
+                let assets: any[] = [];
                 for (let i = 0; i < _paths.length; ++i) {
-                    assets.push(this.loadAsset(_paths[i], cc.Asset, groupName));
+                    assets.push(this.loadAsset<cc.Asset>(_paths[i], cc.Asset, groupName));
                 }
                 return Promise.all(assets);
             }
@@ -122,15 +122,13 @@ namespace ccl {
         }
 
         /**
-         * 释放资源所有的引用计数
+         * 释放一次引用计数
          * @param path
          */
         releaseAsset(path: string) {
             let asset = cc.resources.get(path);
             if (asset) {
-                for (let i = 0; i < asset.refCount; ++i) {
-                    asset.decRef();
-                }
+                asset.decRef();
             } else {
                 cc.warn("try to release resource not exist:", path);
             }

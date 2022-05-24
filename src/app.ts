@@ -1,3 +1,3 @@
-namespace ccl {
-    export function test() {}
-}
+namespace cclib {}
+
+window.cclib = cclib;

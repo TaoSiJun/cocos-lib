@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "console.log('Hello')",
-    "build": "tsc & uglifyjs ./build/ccl.js --output ./build/ccl.min.js --mangle"
+    "build": "tsc & uglifyjs ./build/cclib.js --output ./build/cclib.min.js --mangle"
   },
   "repository": {
     "type": "git",

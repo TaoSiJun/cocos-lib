@@ -1,8 +1,8 @@
-namespace ccl {
+namespace cclib {
     const { ccclass, property, menu } = cc._decorator;
 
     @ccclass("I18nStatic")
-    @menu("ccl/component/I18nStatic")
+    @menu("cclib/I18nStatic")
     export class I18nStatic extends cc.Component {
         @property
         key: string = "";
