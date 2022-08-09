@@ -1,4 +1,4 @@
-namespace ccl {
+namespace cclib {
     class Resources {
         private readonly __groupsCache: { [group: string]: string[] } = {};
         private readonly __assetsCache: { [group: string]: { [path: string]: cc.Asset } } = {};
@@ -43,16 +43,22 @@ namespace ccl {
          * @param group
          * @returns
          */
-        loadGroup(group: string) {
+        async loadGroup(group: string) {
             let _paths = this.__groupsCache[group];
             if (!_paths) {
-                return Promise.reject("group is not found:" + group);
+                throw new Error("group not found:" + group);
             } else {
                 let assets: any[] = [];
                 for (let i = 0; i < _paths.length; ++i) {
-                    assets.push(this.loadAsset(_paths[i], cc.Asset, group));
+                    try {
+                        let a = await this.loadAsset(_paths[i], cc.Asset, group);
+                        assets.push(a);
+                        cc.log("load assets success", _paths[i]);
+                    } catch (error) {
+                        cc.error(group, _paths[i], error);
+                    }
                 }
-                return Promise.all(assets);
+                return assets;
             }
         }
 
@@ -103,24 +109,27 @@ namespace ccl {
          */
         loadAsset<T extends cc.Asset>(path: string, type: typeof cc.Asset, group: string) {
             return new Promise<T>((resolve, reject) => {
-                if (!this.__assetsCache[group]) {
-                    this.__assetsCache[group] = {};
-                }
-                let _cache = cc.resources.get<T>(path, type);
-                if (_cache) {
-                    if (!this.__assetsCache[group][path]) {
-                        this.__assetsCache[group][path] = _cache;
-                        _cache.addRef();
+                let _asset = cc.resources.get<T>(path, type);
+                if (_asset) {
+                    if (!this.__assetsCache[group]) {
+                        this.__assetsCache[group] = {};
                     }
-                    resolve(_cache);
+                    if (!this.__assetsCache[group][path]) {
+                        this.__assetsCache[group][path] = _asset;
+                        _asset.addRef();
+                    }
+                    resolve(_asset);
                 } else {
                     cc.resources.load<T>(path, type, (err, asset) => {
                         if (err) {
                             cc.error("Resources.loadAsset", err);
                             reject(err);
                         } else {
-                            this.__assetsCache[group][path] = asset;
-                            asset.addRef();
+                            if (!cc.resources.get(path)) {
+                                this.__assetsCache[group] = this.__assetsCache[group] || {};
+                                this.__assetsCache[group][path] = asset;
+                                asset.addRef();
+                            }
                             resolve(asset);
                         }
                     });
@@ -128,6 +137,9 @@ namespace ccl {
             });
         }
 
+        /**
+         * 释放所有当前已加载的资源
+         */
         releaseAll() {
             // __deleteCache();
             // cc.resources.releaseAll();

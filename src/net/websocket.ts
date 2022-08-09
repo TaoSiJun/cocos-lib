@@ -13,6 +13,5 @@ namespace cclib {
         Closed,
     }
 
-    export class HTML5WebSocket {
-    }
+    export class HTML5WebSocket {}
 }

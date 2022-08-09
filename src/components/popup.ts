@@ -3,5 +3,5 @@ namespace cclib {
 
     @ccclass("Popup")
     @menu("cclib/Popup")
-    export class Popup extends Window {}
+    export class Popup extends cc.Component {}
 }

@@ -1,4 +1,4 @@
-namespace ccl {
+namespace cclib {
     class PanelManager {
         public replace() {}
 

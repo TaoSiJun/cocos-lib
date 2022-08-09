@@ -1,5 +1,1 @@
-namespace cclib {
-    export class Math {
-        random() {}
-    }
-}
+namespace cclib {}

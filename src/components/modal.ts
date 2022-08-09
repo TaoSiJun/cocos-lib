@@ -3,7 +3,7 @@ namespace cclib {
 
     @ccclass("Modal")
     @menu("cclib/Modal")
-    export class Modal extends Window {
+    export class Modal extends cc.Component {
         @property(cc.Button)
         closeButton: cc.Button | null = null;
         @property({ tooltip: "Block touch the after nodes" })
@@ -33,8 +33,6 @@ namespace cclib {
             node.setSiblingIndex(0);
         }
 
-        private _onClose() {
-            winMgr.remove(this.path);
-        }
+        private _onClose() {}
     }
 }

@@ -3,7 +3,7 @@ namespace cclib {
 
     @ccclass("Panel")
     @menu("cclib/Panel")
-    export class Panel extends Window {
+    export class Panel extends cc.Component {
         @property({ type: cc.Component.EventHandler })
         pushEvents: cc.Component.EventHandler[] = [];
         @property({ type: cc.Component.EventHandler })

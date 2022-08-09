@@ -120,6 +120,4 @@ namespace cclib {
             });
         }
     }
-
-    export const http = new HttpRequest();
 }

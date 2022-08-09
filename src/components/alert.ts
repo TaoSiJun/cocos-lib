@@ -3,7 +3,7 @@ namespace cclib {
 
     @ccclass("Alert")
     @menu("cclib/Alert")
-    export class Alert extends Window {
+    export class Alert extends cc.Component {
         @property(cc.Node)
         cancleNode: cc.Node | null = null;
         @property(cc.Node)
@@ -20,12 +20,12 @@ namespace cclib {
 
         private _onCancle(e: cc.Event.EventTouch) {
             cc.Component.EventHandler.emitEvents(this.cancleEvents, e);
-            winMgr.remove(this.path);
+            // winMgr.remove(this.path);
         }
 
         private _onConfirm(e: cc.Event.EventTouch) {
             cc.Component.EventHandler.emitEvents(this.confirmEvents, e);
-            winMgr.remove(this.path);
+            // winMgr.remove(this.path);
         }
     }
 }

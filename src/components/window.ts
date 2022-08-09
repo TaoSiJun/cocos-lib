@@ -1,20 +1,20 @@
-namespace cclib {
-    // const { ccclass } = cc._decorator;
+// namespace cclib {
+//     const { ccclass } = cc._decorator;
 
-    // @ccclass("Window")
-    export class Window extends cc.Component {
-        /**
-         * The prefab path in `resources`
-         */
-        path: string = "";
+//     @ccclass("Window")
+//     export class Window extends cc.Component {
+//         /**
+//          * The prefab path in `resources`
+//          */
+//         path: string = "";
 
-        /**
-         * Deliver data to window
-         */
-        data: any = null;
+//         /**
+//          * Deliver data to window
+//          */
+//         data: any = null;
 
-        __onAdd() {}
+//         __onAdd() {}
 
-        __onRemove() {}
-    }
-}
+//         __onRemove() {}
+//     }
+// }
