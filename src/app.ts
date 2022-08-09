@@ -1,3 +1,1 @@
-namespace ccl {
-    export function test() {}
-}
+namespace ccl {}

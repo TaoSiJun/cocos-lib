@@ -1,150 +1,143 @@
 namespace ccl {
-    const __groupsCache: { [name: string]: string[] } = {};
-    const __assetsCache: { [name: string]: { [path: string]: {} } } = {};
-
-    function __deleteCache() {
-        for (let k in __groupsCache) {
-            delete __groupsCache[k];
-        }
-        for (let k in __assetsCache) {
-            delete __assetsCache[k];
-        }
-    }
-
     class Resources {
+        private readonly __groupsCache: { [group: string]: string[] } = {};
+        private readonly __assetsCache: { [group: string]: { [path: string]: cc.Asset } } = {};
+
+        private __deleteCache() {
+            for (let group in this.__groupsCache) {
+                delete this.__groupsCache[group];
+                cc.log("delete group:" + group);
+            }
+            for (let group in this.__assetsCache) {
+                for (let path in this.__assetsCache[group]) {
+                    this.__assetsCache[group][path].decRef();
+                }
+                delete this.__assetsCache[group];
+                cc.log("delete assets:" + group);
+            }
+        }
+
         /**
          * 创建一个资源分组配置
-         * @param groupName 组名
+         * @param group 组名
          * @param paths 该组的所有资源路径
          * @param override `true`(默认)会覆盖掉之前的路径 `false`添加到当前组
          * @returns
          */
-        createGroup(groupName: string, paths: string[], override: boolean = true) {
+        createGroup(group: string, paths: string[], override: boolean = true) {
             if (!paths || paths.length == 0) {
                 return false;
             }
-            let _paths = __groupsCache[groupName] || [];
+            let _paths = this.__groupsCache[group] || [];
             if (override) {
                 _paths = paths;
             } else {
                 _paths = _paths.concat(paths);
             }
-            __groupsCache[groupName] = _paths;
+            this.__groupsCache[group] = _paths;
             return true;
         }
 
         /**
          * 加载一组资源
-         * @param groupName
+         * @param group
          * @returns
          */
-        loadGroup(groupName: string) {
-            let _paths = __groupsCache[groupName];
+        loadGroup(group: string) {
+            let _paths = this.__groupsCache[group];
             if (!_paths) {
-                return Promise.reject("group is not found:" + groupName);
+                return Promise.reject("group is not found:" + group);
             } else {
                 let assets = [];
                 for (let i = 0; i < _paths.length; ++i) {
-                    assets.push(this.loadAsset(_paths[i], cc.Asset, groupName));
+                    assets.push(this.loadAsset(_paths[i], cc.Asset, group));
                 }
                 return Promise.all(assets);
             }
         }
 
         /**
-         * 返回分组资源的数量
-         * @param groupName
+         * 返回分组资源的数量 默认0
+         * @param group
          * @returns
          */
-        countGroup(groupName: string) {
-            return (__groupsCache[groupName] && __groupsCache[groupName].length) || 0;
+        countGroup(group: string) {
+            if (this.__groupsCache[group]) {
+                return this.__groupsCache[group].length;
+            }
+            return 0;
         }
 
         /**
          * 获取已加载的分组资源
-         * @param groupName
+         * @param group
          * @returns
          */
-        getGroupAssets(groupName: string) {
-            return __assetsCache[groupName];
+        getAssetsByGroup(group: string) {
+            return this.__assetsCache[group];
         }
 
         /**
          * 释放一个分组的资源 会释放已创建的资源分组配置
-         * @param groupName
+         * @param group
          */
-        releaseGroup(groupName: string) {
-            for (let path in __assetsCache[groupName]) {
-                let asset = cc.resources.get(path);
-                if (asset) {
-                    asset.decRef();
-                } else {
-                    cc.warn("try to release resource not exist:", path);
+        releaseGroup(group: string) {
+            if (this.__assetsCache[group]) {
+                for (let path in this.__assetsCache[group]) {
+                    try {
+                        this.__assetsCache[group][path].decRef();
+                    } catch (error) {
+                        cc.warn("try to release resource not exist. path=" + path);
+                    }
                 }
+                delete this.__assetsCache[group];
             }
-            delete __assetsCache[groupName];
-            delete __groupsCache[groupName];
         }
 
         /**
          * 通过`cc.resources.load`加载一个资源
          * @param path resources目录下的资源路径
          * @param type 资源类型
-         * @param groupName 资源分组名 默认`temp`
+         * @param group 资源分组名
          * @returns
          */
-        loadAsset<T extends cc.Asset>(path: string, type: typeof cc.Asset, groupName: string = "temp") {
+        loadAsset<T extends cc.Asset>(path: string, type: typeof cc.Asset, group: string) {
             return new Promise<T>((resolve, reject) => {
-                if (!__assetsCache[groupName]) {
-                    __assetsCache[groupName] = {};
+                if (!this.__assetsCache[group]) {
+                    this.__assetsCache[group] = {};
                 }
-                let _assetsCache = __assetsCache[groupName];
-                let _asset = cc.resources.get<T>(path, type);
-                if (_asset) {
-                    if (!_assetsCache[path]) {
-                        _asset.addRef();
-                        _assetsCache[path] = _asset;
+                let _cache = cc.resources.get<T>(path, type);
+                if (_cache) {
+                    if (!this.__assetsCache[group][path]) {
+                        this.__assetsCache[group][path] = _cache;
+                        _cache.addRef();
                     }
-                    resolve(_asset);
+                    resolve(_cache);
                 } else {
-                    cc.resources.load<T>(path, type, (err, assets) => {
+                    cc.resources.load<T>(path, type, (err, asset) => {
                         if (err) {
-                            console.error("resources.loadAsset", err);
+                            cc.error("Resources.loadAsset", err);
                             reject(err);
                         } else {
-                            assets.addRef();
-                            _assetsCache[path] = assets;
-                            resolve(assets);
+                            this.__assetsCache[group][path] = asset;
+                            asset.addRef();
+                            resolve(asset);
                         }
                     });
                 }
             });
         }
 
-        /**
-         * 释放资源所有的引用计数
-         * @param path
-         */
-        releaseAsset(path: string) {
-            let asset = cc.resources.get(path);
-            if (asset) {
-                for (let i = 0; i < asset.refCount; ++i) {
-                    asset.decRef();
-                }
-            } else {
-                cc.warn("try to release resource not exist:", path);
-            }
-        }
-
         releaseAll() {
-            __deleteCache();
-            cc.resources.releaseAll();
+            // __deleteCache();
+            // cc.resources.releaseAll();
+            this.__deleteCache();
         }
     }
 
     /**
      * 管理使用`cc.resources`加载的资源
-     * 主要是引用计数`refCount`和资源分组`groupName`
+     * 主要是引用计数`refCount`和资源分组`group`
      */
-    export const resMgr = new Resources();
+    export const resources = new Resources();
 }

@@ -1,6 +1,8 @@
 namespace ccl {
     const { ccclass, property, menu } = cc._decorator;
 
+    @ccclass("Popup")
+    @menu("ccl/component/Panel")
     export class Popup extends cc.Component {
         @property({ tooltip: "Block your popup's touch event" })
         blockInput: boolean = true;
@@ -10,29 +12,27 @@ namespace ccl {
         closeButton: cc.Button | null = null;
 
         /**
-         * Deliver data to popup
+         * deliver data to popup
          */
         data: any = null;
 
         /**
-         * Prefab's path
+         * prefab's path
          */
         prefabPath: string = "";
 
         /**
-         * Call when the popup show
-         * @override
+         * when add invoke
          */
-        onShow() {}
+        onAdded() {}
 
         /**
-         * Call when the popup hide
-         * @override
+         * when remove invoke
          */
-        onHide() {}
+        onRemoved() {}
 
-        hide() {
-            popupMgr.hide(this.prefabPath);
+        remove() {
+            popupMgr.remove(this.prefabPath);
         }
     }
 }

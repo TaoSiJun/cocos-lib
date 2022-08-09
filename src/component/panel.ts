@@ -16,13 +16,11 @@ namespace ccl {
 
         /**
          * Call when the panel poped
-         * @override
          */
         onPopPanel() {}
 
         /**
          * Call when the panel pushed
-         * @override
          */
         onPushPanel() {}
     }

@@ -1,9 +1,9 @@
 namespace ccl {
     const { ccclass, property, menu } = cc._decorator;
 
-    @ccclass("I18nStatic")
-    @menu("ccl/component/I18nStatic")
-    export class I18nStatic extends cc.Component {
+    @ccclass("I18n")
+    @menu("ccl/component/I18n")
+    export class I18n extends cc.Component {
         @property
         key: string = "";
         @property
@@ -26,7 +26,7 @@ namespace ccl {
                 try {
                     (this.getLabel() || this.getRichText()).string = i18nMgr.localize(this.key, ...args);
                 } catch (error) {
-                    cc.error("I18nStatic:", error);
+                    cc.error("I18n:", error);
                 }
             }
         }

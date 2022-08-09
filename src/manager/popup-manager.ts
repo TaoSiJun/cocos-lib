@@ -1,8 +1,8 @@
 namespace ccl {
     class PopupManager {
-        public show(prefabPath: string) {}
+        public add(prefabPath: string) {}
 
-        public hide(prefabPath: string) {}
+        public remove(prefabPath: string) {}
     }
 
     export const popupMgr = new PopupManager();
