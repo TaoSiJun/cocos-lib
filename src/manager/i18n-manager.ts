@@ -1,4 +1,4 @@
-namespace ccl {
+namespace cclib {
     class I18nManager {
         private _data: any;
 

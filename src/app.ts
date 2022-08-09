@@ -1,1 +1,3 @@
-namespace ccl {}
+namespace cclib {}
+
+window.cclib = cclib;

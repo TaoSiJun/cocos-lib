@@ -48,7 +48,7 @@ namespace ccl {
             if (!_paths) {
                 return Promise.reject("group is not found:" + group);
             } else {
-                let assets = [];
+                let assets: any[] = [];
                 for (let i = 0; i < _paths.length; ++i) {
                     assets.push(this.loadAsset(_paths[i], cc.Asset, group));
                 }

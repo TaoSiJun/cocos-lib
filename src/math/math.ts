@@ -1,4 +1,4 @@
-namespace ccl {
+namespace cclib {
     export class Math {
         random() {}
     }

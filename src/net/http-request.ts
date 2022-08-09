@@ -1,4 +1,4 @@
-namespace ccl {
+namespace cclib {
     export class HttpRequest {
         responseType: any = "json";
         withCredentials: boolean = false;
